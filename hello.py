@@ -2,4 +2,4 @@ print(int(input()))
 
 print(2)
 
-print (6)
+print (6)  
