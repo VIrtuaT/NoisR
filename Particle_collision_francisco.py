@@ -32,8 +32,8 @@ initial_velocity2 , mass1 , mass2 , num_frames , box_size ):
     while frame_counter < num_frames:                                
         if ball_collided(current_pos_1, current_pos_2, radius):
            #bolas colidiram, formula deduzida atraves conserv. do momento linear e Energia cinetica
-           current_vel1 = ((mass1 - mass2)*initial_velocity1/(mass1+mass2)) + (2*mass2*initial_velocity2)/(mass1+mass2)    
-           current_vel2 = ((mass2 - mass1)*initial_velocity2/(mass1+mass2)) + (2*mass1*initial_velocity1)/(mass1+mass2)
+           current_vel2, current_vel1 = ((mass2 - mass1)*current_vel2/(mass1+mass2)) + (2*mass1*current_vel1)/(mass1+mass2), ((mass1 - mass2)*current_vel1/(mass1+mass2)) + (2*mass2*current_vel2)/(mass1+mass2)    
+             
        
        
         if wall_collided(current_pos_1, box_size, radius):
