@@ -35,6 +35,9 @@ initial_velocity2 , mass1 , mass2 , num_frames , box_size ):
            current_vel2, current_vel1 = ((mass2 - mass1)*current_vel2/(mass1+mass2)) + (2*mass1*current_vel1)/(mass1+mass2), ((mass1 - mass2)*current_vel1/(mass1+mass2)) + (2*mass2*current_vel2)/(mass1+mass2)    
              
        
+           current_vel2, current_vel1 = ((mass2 - mass1)*current_vel2/(mass1+mass2)) + (2*mass1*current_vel1)/(mass1+mass2), ((mass1 - mass2)*current_vel1/(mass1+mass2)) + (2*mass2*current_vel2)/(mass1+mass2)    
+             
+       
         if wall_collided(current_pos_1, box_size, radius):
            current_vel1 = -current_vel1
         
