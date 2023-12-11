@@ -1,17 +1,20 @@
 import pygame 
 import sys
 import random
-import math
+import math 
 
 # Initialize Pygame
 pygame.init
 
 # Constants
+PI = math.pi
 WIDTH, HEIGHT = 800, 600
 FPS = 60
 PARTICLE_RADIUS = 10
 NUM_PARTICLES = 50
 MAX_SPEED = 2
+START_SPEED = random.uniform(0, MAX_SPEED)
+START_ANGLE = random.uniform(0, 2*PI)
 
 # Colors
 WHITE = (255, 255, 255)
@@ -23,11 +26,11 @@ class Particle:
     def __init__(self, x, y, is_tracer=False):
         self.x = x
         self.y = y
-        self.radius
-        self.color
-        self.speed
-        self.angle
-        self.is_tracer
+        self.radius = PARTICLE_RADIUS
+        self.color = RED
+        self.speed = START_SPEED
+        self.angle = START_ANGLE
+        self.is_tracer = is_tracer
         self.path
 
     def move(self):
