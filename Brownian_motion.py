@@ -43,21 +43,23 @@ class Particle:
         current_position = [START_POSITION[0] + START_x_VELOCITY, START_POSITION[1] + START_y_VELOCITY]
         current_angle = START_ANGLE
 
-        if self.check_collision(self, other_particle): 
-            if self.particle_collision(self, other_particle):
-                # you can find these expressions in collisions wikipedia, simplified since m1 = m2
-                contact_angle = math.atan2(current_y_velocity, current_x_velocity)
-                velocity1 = current_velocity
-                velocity2 = 0  # other_particle velocity
-                angle1 = current_angle
-                angle2 = 0 # other_particle angle
-                current_x_velocity = (velocity2*math.cos(angle2 - contact_angle))*math.cos(contact_angle) + velocity1*math.sin(angle1 - contact_angle)*math.cos(contact_angle+(PI/2))
-                current_y_velocity = (velocity2*math.cos(angle2 - contact_angle))*math.sin(contact_angle) + velocity1*math.sin(angle1 - contact_angle)*math.sin(contact_angle+(PI/2))
+        for other_particle in particles:
             
-            if self.wall_collision(self):
-                contact_angle = math.atan2(current_y_velocity, current_x_velocity)
-                current_x_velocity = current_x_velocity*math.cos(contact_angle)
-                current_y_velocity = current_y_velocity*math.sin(contact_angle)
+            if self.check_collision(other_particle): 
+                if self.particle_collision(other_particle):
+                    # you can find these expressions in collisions wikipedia, simplified since m1 = m2
+                    contact_angle = math.atan2(current_y_velocity, current_x_velocity)
+                    velocity1 = current_velocity
+                    velocity2 = 0  # other_particle velocity
+                    angle1 = current_angle
+                    angle2 = 0 # other_particle angle
+                    current_x_velocity = (velocity2*math.cos(angle2 - contact_angle))*math.cos(contact_angle) + velocity1*math.sin(angle1 - contact_angle)*math.cos(contact_angle+(PI/2))
+                    current_y_velocity = (velocity2*math.cos(angle2 - contact_angle))*math.sin(contact_angle) + velocity1*math.sin(angle1 - contact_angle)*math.sin(contact_angle+(PI/2))
+            
+                if self.wall_collision():
+                    contact_angle = math.atan2(current_y_velocity, current_x_velocity)
+                    current_x_velocity = current_x_velocity*math.cos(contact_angle)
+                    current_y_velocity = current_y_velocity*math.sin(contact_angle)
 
         return current_position
 
@@ -90,7 +92,7 @@ class Particle:
         
 
     def check_collision(self, other_particle):
-        if self.wall_collision(self) or self.particle_collision(self, other_particle):
+        if self.wall_collision() or self.particle_collision(other_particle):
             return True
     
 # Create particles
