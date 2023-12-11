@@ -102,6 +102,7 @@ for i in (0, NUM_PARTICLES):
 # Choose one particle as a tracer
 tracer_index = random.randint(0, NUM_PARTICLES - 1) 
 
+#--------------------------------------------------------------------------------------------------------
 #Set up Pygame screen
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Brownian Motion Simulation")
