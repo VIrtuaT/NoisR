@@ -34,13 +34,28 @@ class Particle:
         self.path
 
     def move(self):
-        return
+        START_POSITION = [[self.x, self.y]]
+        START_x_VELOCITY = START_SPEED * math.cos(START_ANGLE)
+        START_y_VELOCITY = START_SPEED * math.sin(START_ANGLE)
+        current_position = START_POSITION
+
+
+
     
+    def wall_collision(self):
+        pass
+
+    
+    def particle_collision(self):
+        pass
     def check_collision(self, other_particle):
         return
     
 # Create particles
 particles = []
+
+for i in (0, NUM_PARTICLES):
+    particles.append([random.uniform(0, WIDTH), random.uniform(0, HEIGHT), False])
 
 # Choose one particle as a tracer
 tracer_index = random.randint(0, NUM_PARTICLES - 1) 
