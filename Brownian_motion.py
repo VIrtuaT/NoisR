@@ -83,7 +83,7 @@ class Particle:
         if self.y > HEIGHT - PARTICLE_RADIUS:
             return True
 
-    
+    #precisamos de arranjar uma forma de arranjar os atributos da other_particle
     def particle_collision(self, other_particle):
         particle_distance = 100 #calcular distancia entre a particula e outra
 
