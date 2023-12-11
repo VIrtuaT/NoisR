@@ -21,28 +21,55 @@ WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 
+class vector2:
+    def __init__(self, x, y) -> None:
+        self.x = x
+        self.y = y
+    
+    def __add__(self, o):
+        self.x += o.x
+        self.y += o.y
+
+    def __sub__(self,o):
+        self.x -= o.x
+        self.y -= o.y
+
+    def __mul__(self, scalar):
+        self.x *= scalar
+        self.y *= scalar
+
+
+
+
+
+
+
+
+
+
+
 # Particle class
 class Particle:
     def __init__(self, x, y, is_tracer=False):
         self.x = x
         self.y = y
         self.radius = PARTICLE_RADIUS
-        self.color = BLUE
+        if is_tracer:
+            self.color = RED
+        else:
+            self.color = BLUE
         self.speed = START_SPEED
         self.angle = START_ANGLE
         self.is_tracer = is_tracer
         self.path = []
+        self.current_position  = vector2(self.x, self.y)
+        self.current_velocity  = vector2(START_SPEED * math.cos(START_ANGLE),START_SPEED * math.sin(START_ANGLE))
 
     def move(self):
-        START_POSITION = [self.x, self.y]
-        START_x_VELOCITY = START_SPEED * math.cos(START_ANGLE)
-        START_y_VELOCITY = START_SPEED * math.sin(START_ANGLE)
-        current_velocity = START_SPEED
-        current_x_velocity = START_x_VELOCITY
-        current_y_velocity = START_y_VELOCITY
-        current_position = [START_POSITION[0] + START_x_VELOCITY, START_POSITION[1] + START_y_VELOCITY]
+        t = 1/clock.get_fps()
+        current_position = current_position + current_position*t 
         current_angle = START_ANGLE
-
+        
         for other_particle in particles:
             
             if self.check_collision(other_particle): 
@@ -53,14 +80,21 @@ class Particle:
                     velocity2 = 0  # other_particle velocity
                     angle1 = current_angle
                     angle2 = 0 # other_particle angle
-                    current_x_velocity = (velocity2*math.cos(angle2 - contact_angle))*math.cos(contact_angle) + velocity1*math.sin(angle1 - contact_angle)*math.cos(contact_angle+(PI/2))
-                    current_y_velocity = (velocity2*math.cos(angle2 - contact_angle))*math.sin(contact_angle) + velocity1*math.sin(angle1 - contact_angle)*math.sin(contact_angle+(PI/2))
+                    vector2.x = (velocity2*math.cos(angle2 - contact_angle))*math.cos(contact_angle) + velocity1*math.sin(angle1 - contact_angle)*math.cos(contact_angle+(PI/2))
+                    vector2.y = (velocity2*math.cos(angle2 - contact_angle))*math.sin(contact_angle) + velocity1*math.sin(angle1 - contact_angle)*math.sin(contact_angle+(PI/2))
             
                 if self.wall_collision():
                     contact_angle = math.atan2(current_y_velocity, current_x_velocity)
                     current_x_velocity = current_x_velocity*math.cos(contact_angle)
                     current_y_velocity = current_y_velocity*math.sin(contact_angle)
 
+        
+        
+        
+        
+        
+       
+    
         return current_position
 
 
@@ -98,11 +132,18 @@ class Particle:
 # Create particles
 particles = []
 
-for i in (0, NUM_PARTICLES):
-    particles.append(Particle(random.uniform(0, WIDTH), random.uniform(0, HEIGHT), False))
-
 # Choose one particle as a tracer
-tracer_index = random.randint(0, NUM_PARTICLES - 1) 
+tracer_index = random.randint(0, NUM_PARTICLES - 1)
+
+for i in (0, NUM_PARTICLES):
+    if i == tracer_index:
+        particles.append(Particle(random.uniform(0, WIDTH), random.uniform(0, HEIGHT), True))
+
+    else:
+        particles.append(Particle(random.uniform(0, WIDTH), random.uniform(0, HEIGHT), False))
+    
+
+ 
 
 #--------------------------------------------------------------------------------------------------------
 #Set up Pygame screen
