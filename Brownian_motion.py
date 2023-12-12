@@ -13,96 +13,70 @@ FPS = 60
 PARTICLE_RADIUS = 10
 NUM_PARTICLES = 50
 MAX_SPEED = 2
-START_SPEED = random.uniform(0, MAX_SPEED)
-START_ANGLE = random.uniform(0, 2*PI)
 
 # Colors
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 
-class vector2:
-    def __init__(self, x, y) -> None:
-        self.x = x
-        self.y = y
-    
-    def __add__(self, o):
-        self.x += o.x
-        self.y += o.y
+PARTICLE_COUNTER = 0
 
-    def __sub__(self,o):
-        self.x -= o.x
-        self.y -= o.y
+def random_starting_speed():
+    return random.uniform(0, MAX_SPEED)
 
-    def __mul__(self, scalar):
-        self.x *= scalar
-        self.y *= scalar
-
-
-
-
-
-
-
-
-
-
+def random_starting_angle():
+    return random.uniform(0, 2*PI)
 
 # Particle class
 class Particle:
     def __init__(self, x, y, is_tracer=False):
+        global PARTICLE_COUNTER
+        PARTICLE_COUNTER += 1
+        # particle number
+        self.id = PARTICLE_COUNTER
         self.x = x
         self.y = y
+        
         self.radius = PARTICLE_RADIUS
+        self.path = []
+
+        self.current_position  = pygame.math.Vector2(self.x, self.y)
+
+        self.speed = random_starting_speed()
+        self.angle = random_starting_angle()
+        self.current_velocity = pygame.math.Vector2(self.speed * math.cos(self.angle), self.speed * math.sin(self.angle))
+        
+        self.is_tracer = is_tracer
         if is_tracer:
             self.color = RED
         else:
             self.color = BLUE
-        self.speed = START_SPEED
-        self.angle = START_ANGLE
-        self.is_tracer = is_tracer
-        self.path = []
-        self.current_position  = vector2(self.x, self.y)
-        self.current_velocity  = vector2(START_SPEED * math.cos(START_ANGLE),START_SPEED * math.sin(START_ANGLE))
 
-    def move(self):
-        t = 1/clock.get_fps()
-        current_position = current_position + current_position*t 
-        current_angle = START_ANGLE
+    def move(self):   
+        self.current_position = self.current_position + self.current_velocity 
         
-        for other_particle in particles:
-            
-            if self.check_collision(other_particle): 
-                if self.particle_collision(other_particle):
-                    # you can find these expressions in collisions wikipedia, simplified since m1 = m2
-                    contact_angle = math.atan2(current_y_velocity, current_x_velocity)
-                    velocity1 = current_velocity
-                    velocity2 = 0  # other_particle velocity
-                    angle1 = current_angle
-                    angle2 = 0 # other_particle angle
-                    vector2.x = (velocity2*math.cos(angle2 - contact_angle))*math.cos(contact_angle) + velocity1*math.sin(angle1 - contact_angle)*math.cos(contact_angle+(PI/2))
-                    vector2.y = (velocity2*math.cos(angle2 - contact_angle))*math.sin(contact_angle) + velocity1*math.sin(angle1 - contact_angle)*math.sin(contact_angle+(PI/2))
-            
-                if self.wall_collision():
-                    contact_angle = math.atan2(current_y_velocity, current_x_velocity)
-                    current_x_velocity = current_x_velocity*math.cos(contact_angle)
-                    current_y_velocity = current_y_velocity*math.sin(contact_angle)
+        #for other_particle in particles:
+        #    if other_particle.id == self.id:
+        #        continue
+        #      
+        #    if self.particle_collision(other_particle):
+        #        # you can find these expressions in collisions wikipedia, simplified since m1 = m2
+        #        contact_angle = math.atan2(self.current_velocity.x, self.current_velocity.y)
+        #        velocity1 = self.current_velocity
+        #        velocity2 = other_particle.current_velocity
+        #        angle1 = self.current_angle
+        #        angle2 = other_particle.current_angle
+        #        self.current_velocity.x = (velocity2.x*math.cos(angle2 - contact_angle))*math.cos(contact_angle) + velocity1.x*math.sin(angle1 - contact_angle)*math.cos(contact_angle+(PI/2))
+        #        self.current_velocity.y = (velocity2.y*math.cos(angle2 - contact_angle))*math.sin(contact_angle) + velocity1.y*math.sin(angle1 - contact_angle)*math.sin(contact_angle+(PI/2))
+        #
+        #    if self.wall_collision():
+        #        contact_angle = math.atan2(self.current_velocity.y, self.current_velocity.x)
+        #        self.current_velocity.x = self.current_velocity.x*math.cos(contact_angle)
+        #        self.current_velocity.y = self.current_velocity.y*math.sin(contact_angle)
 
-        
-        
-        
-        
-        
-       
-    
-        return current_position
+        self.x = self.current_position.x
+        self.y = self.current_position.y
 
-
-
-
-
-
-    
     def wall_collision(self):
         # right wall
         if self.x >= WIDTH - PARTICLE_RADIUS:
@@ -116,34 +90,29 @@ class Particle:
         # ceiling
         if self.y > HEIGHT - PARTICLE_RADIUS:
             return True
+        return False
 
     #precisamos de arranjar uma forma de arranjar os atributos da other_particle
     def particle_collision(self, other_particle):
-        particle_distance = 100 #calcular distancia entre a particula e outra
+        return False
+        #particle_distance = 100 #calcular distancia entre a particula e outra
 
-        if particle_distance <= 2*PARTICLE_RADIUS:
-            return True
-        
-
-    def check_collision(self, other_particle):
-        if self.wall_collision() or self.particle_collision(other_particle):
-            return True
+        #if particle_distance <= 2*PARTICLE_RADIUS:
+           # return True
     
 # Create particles
-particles = []
-
-# Choose one particle as a tracer
+# And choose one particle as a tracer
 tracer_index = random.randint(0, NUM_PARTICLES - 1)
 
-for i in (0, NUM_PARTICLES):
+particles = []
+for i in range(NUM_PARTICLES):
+    random_x = random.uniform(0, WIDTH)
+    random_y = random.uniform(0, HEIGHT)
     if i == tracer_index:
-        particles.append(Particle(random.uniform(0, WIDTH), random.uniform(0, HEIGHT), True))
-
+        particles.append(Particle(random_x, random_y, True))
     else:
-        particles.append(Particle(random.uniform(0, WIDTH), random.uniform(0, HEIGHT), False))
+        particles.append(Particle(random_x, random_y, False))
     
-
- 
 
 #--------------------------------------------------------------------------------------------------------
 #Set up Pygame screen
@@ -165,7 +134,7 @@ while True:
     # Draw particles and paths
     screen.fill(WHITE)
     for particle in particles:
-        pygame.draw.circle(screen, particle.color, (int(particle.x), int(particle.y), particle.radius))
+        pygame.draw.circle(screen, particle.color, (int(particle.x), int(particle.y)), particle.radius)
 
         # Draw path for the tracer
         if particle.is_tracer and len(particle.path) >= 2:
