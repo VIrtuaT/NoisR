@@ -65,6 +65,7 @@ class Particle:
         if self.is_wall_collision():
             # right wall 
             if self.future_position.x >= WIDTH - PARTICLE_RADIUS:
+                # supposedly avoids some errors, not sure yet
                 if self.current_velocity.x < 0:
                     pass
                 else:
@@ -81,18 +82,14 @@ class Particle:
             
             # ceiling
             if self.future_position.y > HEIGHT - PARTICLE_RADIUS:
-                if self.current_velocity.y < 0:
-                    pass
-                else:
-                    self.current_velocity.y *= -1
+                self.current_velocity.y *= -1
                  
             
-    
         for other_particle in particles:
             if other_particle.id == self.id:
                 continue      
             if self.is_particle_collision(other_particle):
-                # makes balls sticky.(haven´t figured out how to make them properly collide)
+                # makes balls sticky rarely??
                 self.current_velocity, other_particle.current_velocity = other_particle.current_velocity, self.current_velocity 
 
         self.x = self.current_position.x
