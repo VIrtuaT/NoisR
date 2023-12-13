@@ -47,35 +47,37 @@ class Particle:
         self.current_angle = self.angle
         self.current_velocity = pygame.math.Vector2(self.speed * math.cos(self.angle), self.speed * math.sin(self.angle))
         
+        self.future_position = self.current_position + self.current_velocity
+
         self.is_tracer = is_tracer
         if is_tracer:
             self.color = RED
         else:
             self.color = BLUE
+        
 
     def move(self):   
         self.current_position = self.current_position + self.current_velocity 
-        future_position = self.current_position + self.current_velocity
-
+      
         if self.is_tracer:
             self.path.append([self.x, self.y])
             
         if self.is_wall_collision():
-            # right wall collision
-            if future_position.x >= WIDTH - PARTICLE_RADIUS:
+            # right wall 
+            if self.future_position.x >= WIDTH - PARTICLE_RADIUS:
                 self.current_velocity.x *= -1
                 
             # left wall
-            if future_position.x <= PARTICLE_RADIUS:
+            if self.future_position.x <= PARTICLE_RADIUS:
                 self.current_velocity.x *= -1
                
             # floor
-            if future_position.y <= PARTICLE_RADIUS:
+            if self.future_position.y <= PARTICLE_RADIUS:
                 self.current_velocity.y *= -1
              
             
             # ceiling
-            if future_position.y > HEIGHT - PARTICLE_RADIUS:
+            if self.future_position.y > HEIGHT - PARTICLE_RADIUS:
                  self.current_velocity.y *= -1
                  
             
@@ -90,25 +92,27 @@ class Particle:
         self.x = self.current_position.x
         self.y = self.current_position.y
         self.angle = self.current_angle
+        self.future_position = self.current_position + self.current_velocity
+
 
     def is_wall_collision(self):
         # right wall
-        if self.x >= WIDTH - PARTICLE_RADIUS:
+        if self.future_position.x >= WIDTH - PARTICLE_RADIUS:
             return True
         # left wall
-        if self.x <= PARTICLE_RADIUS:
+        if self.future_position.x <= PARTICLE_RADIUS:
             return True
         # floor
-        if self.y <= PARTICLE_RADIUS:
+        if self.future_position.y <= PARTICLE_RADIUS:
             return True
         # ceiling
-        if self.y > HEIGHT - PARTICLE_RADIUS:
+        if self.future_position.y > HEIGHT - PARTICLE_RADIUS:
             return True
         return False
 
    
     def is_particle_collision(self, other_particle):
-       distance = self.current_position.distance_to(other_particle.current_position)
+       distance = self.future_position.distance_to(other_particle.future_position)
        if distance <= 2*PARTICLE_RADIUS:
            return True
        else:
