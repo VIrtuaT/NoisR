@@ -62,7 +62,8 @@ class Particle:
             # right wall collision
             if self.x >= WIDTH - PARTICLE_RADIUS:
                 self.current_velocity.x *= -1
-                self.current_position -= (2,0)
+                # added position change to prevent bugs where particle gets stuck on the wall
+                self.current_position -= (2,0) 
             # left wall
             if self.x <= PARTICLE_RADIUS:
                 self.current_velocity.x *= -1
@@ -83,6 +84,7 @@ class Particle:
             if other_particle.id == self.id:
                 continue      
             if self.is_particle_collision(other_particle):
+                #makes balls sticky.
                 self.current_velocity = other_particle.current_velocity 
 
         self.x = self.current_position.x
