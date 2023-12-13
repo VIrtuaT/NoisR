@@ -55,29 +55,29 @@ class Particle:
 
     def move(self):   
         self.current_position = self.current_position + self.current_velocity 
+        future_position = self.current_position + self.current_velocity
+
         if self.is_tracer:
             self.path.append([self.x, self.y])
             
         if self.is_wall_collision():
             # right wall collision
-            if self.x >= WIDTH - PARTICLE_RADIUS:
+            if future_position.x >= WIDTH - PARTICLE_RADIUS:
                 self.current_velocity.x *= -1
-                # added position change to prevent bugs where particle gets stuck on the wall
-                self.current_position -= (2,0) 
+                
             # left wall
-            if self.x <= PARTICLE_RADIUS:
+            if future_position.x <= PARTICLE_RADIUS:
                 self.current_velocity.x *= -1
-                self.current_position += (2,0)
-            
+               
             # floor
-            if self.y <= PARTICLE_RADIUS:
+            if future_position.y <= PARTICLE_RADIUS:
                 self.current_velocity.y *= -1
-                self.current_position += (0,2)
+             
             
             # ceiling
-            if self.y > HEIGHT - PARTICLE_RADIUS:
+            if future_position.y > HEIGHT - PARTICLE_RADIUS:
                  self.current_velocity.y *= -1
-                 self.current_position -= (0,2)
+                 
             
     
         for other_particle in particles:
@@ -121,8 +121,8 @@ tracer_index = random.randint(0, NUM_PARTICLES - 1)
 
 particles = []
 for i in range(NUM_PARTICLES):
-    random_x = random.uniform(0, WIDTH)
-    random_y = random.uniform(0, HEIGHT)
+    random_x = random.uniform(0 + PARTICLE_RADIUS, WIDTH - PARTICLE_RADIUS)
+    random_y = random.uniform(0 + PARTICLE_RADIUS, HEIGHT - PARTICLE_RADIUS)
     if i == tracer_index:
         particles.append(Particle(random_x, random_y, True))
     else:
