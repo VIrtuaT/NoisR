@@ -44,6 +44,7 @@ class Particle:
 
         self.speed = random_starting_speed()
         self.angle = random_starting_angle()
+        self.current_angle = self.angle
         self.current_velocity = pygame.math.Vector2(self.speed * math.cos(self.angle), self.speed * math.sin(self.angle))
         
         self.is_tracer = is_tracer
@@ -56,9 +57,25 @@ class Particle:
         self.current_position = self.current_position + self.current_velocity 
         
         if self.is_wall_collision():
-            contact_angle = math.atan2(self.current_velocity.y, self.current_velocity.x)
-            self.current_velocity.x = self.current_velocity.x*math.cos(contact_angle)
-            self.current_velocity.y = self.current_velocity.y*math.sin(contact_angle)
+            # right wall collision
+            if self.x >= WIDTH - PARTICLE_RADIUS:
+                self.current_velocity.x *= -1
+                self.current_position -= (2,0)
+            # left wall
+            if self.x <= PARTICLE_RADIUS:
+                self.current_velocity.x *= -1
+                self.current_position += (2,0)
+            
+            # floor
+            if self.y <= PARTICLE_RADIUS:
+                self.current_velocity.y *= -1
+                self.current_position += (0,2)
+            
+            # ceiling
+            if self.y > HEIGHT - PARTICLE_RADIUS:
+                 self.current_velocity.y *= -1
+                 self.current_position -= (0,2)
+            
     
         for other_particle in particles:
             if other_particle.id == self.id:
@@ -72,8 +89,11 @@ class Particle:
                 angle2 = other_particle.current_angle
                 self.current_velocity.x = (velocity2.x*math.cos(angle2 - contact_angle))*math.cos(contact_angle) + velocity1.x*math.sin(angle1 - contact_angle)*math.cos(contact_angle+(PI/2))
                 self.current_velocity.y = (velocity2.y*math.cos(angle2 - contact_angle))*math.sin(contact_angle) + velocity1.y*math.sin(angle1 - contact_angle)*math.sin(contact_angle+(PI/2))
+
+                self.current_velocity = other_particle.current_velocity 
         self.x = self.current_position.x
         self.y = self.current_position.y
+        self.angle = self.current_angle
 
     def is_wall_collision(self):
         # right wall
