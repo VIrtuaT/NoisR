@@ -84,7 +84,6 @@ class Particle:
                 continue      
             if self.is_particle_collision(other_particle):
                 self.current_velocity = other_particle.current_velocity 
-               
 
         self.x = self.current_position.x
         self.y = self.current_position.y
