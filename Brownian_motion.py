@@ -55,7 +55,8 @@ class Particle:
 
     def move(self):   
         self.current_position = self.current_position + self.current_velocity 
-        
+        if self.is_tracer:
+            self.path.append([self.x, self.y])
         if self.is_wall_collision():
             # right wall collision
             if self.x >= WIDTH - PARTICLE_RADIUS:
