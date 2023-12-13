@@ -57,6 +57,7 @@ class Particle:
         self.current_position = self.current_position + self.current_velocity 
         if self.is_tracer:
             self.path.append([self.x, self.y])
+            
         if self.is_wall_collision():
             # right wall collision
             if self.x >= WIDTH - PARTICLE_RADIUS:
@@ -82,16 +83,9 @@ class Particle:
             if other_particle.id == self.id:
                 continue      
             if self.is_particle_collision(other_particle):
-                # you can find these expressions in collisions wikipedia, simplified since m1 = m2
-                contact_angle = math.atan2(self.current_velocity.x, self.current_velocity.y)
-                velocity1 = self.current_velocity
-                velocity2 = other_particle.current_velocity
-                angle1 = self.current_angle
-                angle2 = other_particle.current_angle
-                self.current_velocity.x = (velocity2.x*math.cos(angle2 - contact_angle))*math.cos(contact_angle) + velocity1.x*math.sin(angle1 - contact_angle)*math.cos(contact_angle+(PI/2))
-                self.current_velocity.y = (velocity2.y*math.cos(angle2 - contact_angle))*math.sin(contact_angle) + velocity1.y*math.sin(angle1 - contact_angle)*math.sin(contact_angle+(PI/2))
-
                 self.current_velocity = other_particle.current_velocity 
+               
+
         self.x = self.current_position.x
         self.y = self.current_position.y
         self.angle = self.current_angle
@@ -111,13 +105,14 @@ class Particle:
             return True
         return False
 
-    #precisamos de arranjar uma forma de arranjar os atributos da other_particle
+   
     def is_particle_collision(self, other_particle):
-        return False
-        #particle_distance = 100 #calcular distancia entre a particula e outra
+       distance = self.current_position.distance_to(other_particle.current_position)
+       if distance <= 2*PARTICLE_RADIUS:
+           return True
+       else:
+           return False
 
-        #if particle_distance <= 2*PARTICLE_RADIUS:
-           # return True
     
 # Create particles
 # And choose one particle as a tracer
