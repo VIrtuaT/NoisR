@@ -84,7 +84,7 @@ class Particle:
             if other_particle.id == self.id:
                 continue      
             if self.is_particle_collision(other_particle):
-                #makes balls sticky.
+                # makes balls sticky.(haven´t figured out how to make them properly collide)
                 self.current_velocity = other_particle.current_velocity 
 
         self.x = self.current_position.x
