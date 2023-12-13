@@ -60,12 +60,15 @@ class Particle:
         self.current_position = self.current_position + self.current_velocity 
       
         if self.is_tracer:
-            self.path.append([self.x, self.y])
+            self.path.append(self.current_position)
             
         if self.is_wall_collision():
             # right wall 
             if self.future_position.x >= WIDTH - PARTICLE_RADIUS:
-                self.current_velocity.x *= -1
+                if self.current_velocity.x < 0:
+                    pass
+                else:
+                    self.current_velocity.x *= -1
                 
             # left wall
             if self.future_position.x <= PARTICLE_RADIUS:
@@ -78,7 +81,10 @@ class Particle:
             
             # ceiling
             if self.future_position.y > HEIGHT - PARTICLE_RADIUS:
-                 self.current_velocity.y *= -1
+                if self.current_velocity.y < 0:
+                    pass
+                else:
+                    self.current_velocity.y *= -1
                  
             
     
@@ -87,7 +93,7 @@ class Particle:
                 continue      
             if self.is_particle_collision(other_particle):
                 # makes balls sticky.(haven´t figured out how to make them properly collide)
-                self.current_velocity = other_particle.current_velocity 
+                self.current_velocity, other_particle.current_velocity = other_particle.current_velocity, self.current_velocity 
 
         self.x = self.current_position.x
         self.y = self.current_position.y
