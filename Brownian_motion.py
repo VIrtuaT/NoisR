@@ -91,7 +91,8 @@ class Particle:
             if self.is_particle_collision(other_particle):
                 # makes balls sticky rarely??
                 self.current_velocity, other_particle.current_velocity = other_particle.current_velocity, self.current_velocity 
-
+                if self.is_tracer:
+                    other_particle.color = RED
         self.x = self.current_position.x
         self.y = self.current_position.y
         self.angle = self.current_angle
