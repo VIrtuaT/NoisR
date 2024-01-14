@@ -16,7 +16,7 @@ def convert_to_string(data):
     return binary_string
 
 teste = read_txt_file("seq1.txt")
-print(teste)
+#print(teste)
 
 def plot_histogram(int_list):
     plt.hist(int_list, bins=max(int_list)-min(int_list)+1,align="left", edgecolor="black") #(esta linha pertence a de cima)
@@ -43,14 +43,12 @@ for i in range(n):
     if len(binary_int_list) == 6:
         num = binary_int_list[0] * 2**5 + binary_int_list[1] * 2**4 +binary_int_list[2] * 2**3 +binary_int_list[3] * 2**2 +binary_int_list[4] * 2**1 +binary_int_list[5] * 2**0
         binary_int_list.clear()
-        decimal_int_list.append(num)
-    
+        decimal_int_list.append(num)    
 
 s_obs = abs(s_n)/sqrt(n)
 p_value = erfc(s_obs/sqrt(2))
 print(p_value)
-print(s_n)
+#print(s_n)
 
-int_list = list(teste)
 plot_histogram(decimal_int_list)
 #o grafico é MUITO diferente da distribuição normal (bom senso).
